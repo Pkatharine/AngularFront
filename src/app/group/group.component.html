@@ -1,0 +1,54 @@
+<table width="100%">
+  <tr>
+    <td><h1 align = "center">Group list</h1></td>
+    <td><h3>Here admin can create/delete/edit groups</h3></td>
+    <td class="status-message">{{statusMessage}}</td>
+  </tr>
+</table>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <td>ID</td>
+    <td>Group number</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  </thead>
+  <tbody>
+  <tr *ngFor="let group of groups">
+    <ng-template [ngTemplateOutlet]="loadTemplate(group)"
+                 [ngTemplateOutletContext]="{ $implicit: group}">
+    </ng-template>
+  </tr>
+  </tbody>
+</table>
+<input type="button" *ngIf="role=='admin' && !editedGroup" value="Add" class="btn btn-primary btn-block" (click)="addGroup()" />
+<input type="button" *ngIf="role!='admin'" value="Add" class="btn btn-primary btn-block" disabled />
+
+<!--шаблон для чтения-->
+<ng-template #readOnlyTemplate let-group>
+  <td>{{group._id}}</td>
+  <td>{{group.groupName}}</td>
+ 
+  <td>
+    <input type="button" *ngIf="role=='admin'" value="Edit" class="btn btn-primary btn-block" (click)="editGroup(group)" />
+    <input type="button" *ngIf="role!='admin'" value="Edit" class="btn btn-primary btn-block" disabled />
+  </td>
+  <td>
+    <input type="button" *ngIf="role=='admin'" value="Delete" (click)="deleteGroup(group)" class="btn btn-danger btn-block" />
+    <input type="button" *ngIf="role!='admin'" value="Delete" class="btn btn-danger btn-block" disabled />
+  </td>
+</ng-template>
+
+<!--шаблон для редактирования-->
+<ng-template #editTemplate>
+  <td><input type="text" class="form-control" [(ngModel)]="editedGroup._id" readonly disabled placeholder="ID"></td>
+  <td><input type="text" class="form-control" [(ngModel)]="editedGroup.groupName" placeholder="number"></td>
+  <td>
+    <input type="button" value="Save" (click)="saveGroup()" class="btn btn-success btn-block" />
+  </td>
+  <td>
+    <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning btn-block" />
+  </td>
+</ng-template>

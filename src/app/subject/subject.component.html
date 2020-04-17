@@ -1,0 +1,75 @@
+<table width="100%">
+  <tr>
+    <td><h1 align ="center">Subject list</h1></td>
+    <td><h3>Here admin can create/delete/edit subjects</h3></td>
+    <td class="status-message">{{statusMessage}}</td>
+  </tr>
+</table>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <td>ID</td>
+    <td>Name</td>
+    <td>Teacher</td>
+    <td>Group</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  </thead>
+  <tbody>
+  <tr *ngFor="let subject of subjects">
+    <ng-template [ngTemplateOutlet]="loadTemplate(subject)"
+                 [ngTemplateOutletContext]="{ $implicit: subject}">
+    </ng-template>
+  </tr>
+  </tbody>
+  <tbody>
+  
+  </tbody>
+</table>
+<input type="button" *ngIf="role=='admin' && !editedSubject" value="Add" class="btn btn-primary btn-block" (click)="addSubject()" />
+<input type="button" *ngIf="role!='admin'" value="Add" class="btn btn-primary btn-block" disabled />
+
+<!--шаблон для чтения-->
+<ng-template #readOnlyTemplate let-subject>
+  <td>{{subject._id}}</td>
+  <td>{{subject.name}}</td>
+  <td>{{subject.teacher.fullName}}</td>
+  <td>{{subject.group.groupName}}</td>
+  <td>
+    <input type="button" *ngIf="role=='admin'" value="Edit" class="btn btn-primary btn-block" (click)="editSubject(subject)" />
+    <input type="button" *ngIf="role!='admin'" value="Edit" class="btn btn-primary btn-block" disabled />
+  </td>
+  <td>
+    <input type="button" *ngIf="role=='admin'" value="Delete" (click)="deleteSubject(subject)" class="btn btn-danger btn-block" />
+    <input type="button" *ngIf="role!='admin'" value="Delete" class="btn btn-danger btn-block" disabled />
+  </td>
+</ng-template>
+
+<!--шаблон для редактирования-->
+<ng-template #editTemplate>
+  <td>
+    <input type="text" [(ngModel)]="editedSubject._id" readonly disabled class="form-control" />
+  </td>
+  <td>
+    <input type="text" [(ngModel)]="editedSubject.name" class="form-control" />
+  </td>
+  <td>
+    <select class="form-control" [(ngModel)]="editedSubject.teacher" name="teacher">
+      <option *ngFor="let teacher of teachers" [ngValue]="teacher">{{teacher.fullName}}</option>
+    </select>
+  </td>
+  <td>
+    <select class="form-control" [(ngModel)]="editedSubject.group" name="group">
+      <option *ngFor="let group of groups" [ngValue]="group">{{group.groupName}}</option>
+    </select>
+  </td>
+  
+  <td>
+    <input type="button" value="Save" (click)="saveSubject()" class="btn btn-success btn-block" />
+  </td>
+  <td>
+    <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning btn-block" />
+  </td>
+</ng-template>

@@ -1,0 +1,64 @@
+<table width="100%">
+  <tr>
+    <td><h1 align = "center">Teacher list</h1></td>
+    <td><h3>Here admin can create/delete/edit teachers</h3></td>
+    <td class="status-message">{{statusMessage}}</td>
+  </tr>
+</table>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <td>ID</td>
+    <td>Full name</td>
+    <td>Position</td>
+    <td>is allowed?</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  </thead>
+  <tbody>
+  <tr *ngFor="let teacher of teachers">
+    <ng-template [ngTemplateOutlet]="loadTemplate(teacher)"
+                 [ngTemplateOutletContext]="{ $implicit: teacher}">
+    </ng-template>
+  </tr>
+  </tbody>
+</table>
+<input type="button" *ngIf="role=='admin' && !editedTeacher" value="Add" class="btn btn-primary btn-block" (click)="addTeacher()" />
+<input type="button" *ngIf="role!='admin'" value="Add" class="btn btn-primary btn-block" disabled />
+
+<!--шаблон для чтения-->
+<ng-template #readOnlyTemplate let-teacher>
+  <td>{{teacher._id}}</td>
+  <td>{{teacher.fullName}}</td>
+  <td>{{teacher.position}}</td>
+  <td>{{teacher.isAllowed}}</td>
+  <td>
+    <input type="button" *ngIf="role=='admin'" value="Edit" class="btn btn-primary btn-block" (click)="editTeacher(teacher)" />
+    <input type="button" *ngIf="role!='admin'" value="Edit" class="btn btn-primary btn-block" disabled />
+  </td>
+  <td>
+    <input type="button" *ngIf="role=='admin'" value="Delete" (click)="deleteTeacher(teacher)" class="btn btn-danger btn-block" />
+    <input type="button" *ngIf="role!='admin'" value="Delete" class="btn btn-danger btn-block" disabled />
+  </td>
+</ng-template>
+
+<!--шаблон для редактирования-->
+<ng-template #editTemplate>
+  <td><input type="text" class="form-control" [(ngModel)]="editedTeacher._id" readonly disabled placeholder="ID"></td>
+  <td><input type="text" class="form-control" [(ngModel)]="editedTeacher.fullName" placeholder="name"></td>
+  <td><input type="text" class="form-control" [(ngModel)]="editedTeacher.position" placeholder="position"></td>
+  <td>
+    <select class="form-control" [(ngModel)]="editedTeacher.isAllowed" >
+      <option value=true>True</option>
+      <option value=false>False</option>
+    </select>
+  </td>
+  <td>
+    <input type="button" value="Save" (click)="saveTeacher()" class="btn btn-success btn-block" />
+  </td>
+  <td>
+    <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning btn-block" />
+  </td>
+</ng-template>

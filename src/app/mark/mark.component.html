@@ -1,0 +1,83 @@
+<table width="100%">
+  <tr>
+    <td><h1 align ="center">Marks list</h1></td>
+    <td><h6>Here only admin and teacher can create/delete/edit marks</h6></td>
+    <td><h6>Students are only allowed to see grades</h6></td>
+    <td class="status-message">{{statusMessage}}</td>
+  </tr>
+</table>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <td>ID</td>
+    <td>Mark</td>
+    <td>Student</td>
+    <td>Subject</td>
+    <td>Teacher</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  </thead>
+  <tbody>
+  <tr *ngFor="let mark of marks">
+    <ng-template [ngTemplateOutlet]="loadTemplate(mark)"
+                 [ngTemplateOutletContext]="{ $implicit: mark}">
+    </ng-template>
+  </tr>
+  </tbody>
+  <tbody>
+  
+  </tbody>
+</table>
+<input type="button" *ngIf="role=='admin' || role=='teacher' && !editedMark" value="Add" class="btn btn-primary btn-block" (click)="addMark()" />
+<input type="button" *ngIf="role=='student'" value="Add" class="btn btn-primary btn-block" disabled />
+
+<!--шаблон для чтения-->
+<ng-template #readOnlyTemplate let-mark>
+  <td>{{mark._id}}</td>
+  <td>{{mark.mark}}</td>
+  <td>{{mark.student.fullName}}</td>
+  <td>{{mark.subject.name}}</td>
+  <td>{{mark.teacher.fullName}}</td>
+  <td>
+    <input type="button" *ngIf="role=='admin' || role=='teacher'" value="Edit" class="btn btn-primary btn-block" (click)="editMark(mark)" />
+    <input type="button" *ngIf="role=='student'" value="Edit" class="btn btn-primary btn-block" disabled />
+  </td>
+  <td>
+    <input type="button" *ngIf="role=='admin' || role=='teacher'" value="Delete" (click)="deleteMark(mark)" class="btn btn-danger btn-block" />
+    <input type="button" *ngIf="role=='student'" value="Delete" class="btn btn-danger btn-block" disabled />
+  </td>
+</ng-template>
+
+<!--шаблон для редактирования-->
+<ng-template #editTemplate>
+  <td>
+    <input type="text" [(ngModel)]="editedMark._id" readonly disabled class="form-control" />
+  </td>
+  <td>
+    <input type="number" [(ngModel)]="editedMark.mark" class="form-control" />
+  </td>
+  <td>
+    <select class="form-control" [(ngModel)]="editedMark.student" name="student">
+      <option *ngFor="let student of students" [ngValue]="student">{{student.fullName}}</option>
+    </select>
+  </td>
+  <td>
+    <select class="form-control" [(ngModel)]="editedMark.subject" name="subject">
+      <option *ngFor="let subject of subjects" [ngValue]="subject">{{subject.name}}</option>
+    </select>
+  </td>
+  <td>
+    <select class="form-control" [(ngModel)]="editedMark.teacher" name="teacher">
+      <option *ngFor="let teacher of teachers" [ngValue]="teacher">{{teacher.fullName}}</option>
+    </select>
+  </td>
+  
+  <td>
+    <input type="button" value="Save" (click)="saveMark()" class="btn btn-success btn-block" />
+  </td>
+  <td>
+    <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning btn-block" />
+  </td>
+</ng-template>

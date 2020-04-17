@@ -1,0 +1,76 @@
+<table width="100%">
+  <tr>
+    <td><h1 align ="center">Students list</h1></td>
+    <td><h3>Here admin can create/delete/edit students</h3></td>
+    <td class="status-message">{{statusMessage}}</td>
+  </tr>
+</table>
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <td>ID</td>
+    <td>Full Name</td>
+    <td>Group</td>
+    <td>is allowed?</td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  </thead>
+  <tbody>
+  <tr *ngFor="let student of students">
+    <ng-template [ngTemplateOutlet]="loadTemplate(student)"
+                 [ngTemplateOutletContext]="{ $implicit: student}">
+    </ng-template>
+  </tr>
+  </tbody>
+  <tbody>
+  
+  </tbody>
+</table>
+<input type="button" *ngIf="role=='admin' && !editedStudent" value="Add" class="btn btn-primary btn-block" (click)="addStudent()" />
+<input type="button" *ngIf="role!='admin'" value="Add" class="btn btn-primary btn-block" disabled />
+
+<!--шаблон для чтения-->
+<ng-template #readOnlyTemplate let-student>
+  <td>{{student._id}}</td>
+  <td>{{student.fullName}}</td>
+  <td>{{student.group.groupName}}</td>
+  <td>{{student.isAllowed}}</td>
+  <td>
+    <input type="button" *ngIf="role=='admin'" value="Edit" class="btn btn-primary btn-block" (click)="editStudent(student)" />
+    <input type="button" *ngIf="role!='admin'" value="Edit" class="btn btn-primary btn-block" disabled />
+  </td>
+  <td>
+    <input type="button" *ngIf="role=='admin'" value="Delete" (click)="deleteStudent(student)" class="btn btn-danger btn-block" />
+    <input type="button" *ngIf="role!='admin'" value="Delete" class="btn btn-danger btn-block" disabled />
+  </td>
+</ng-template>
+
+<!--шаблон для редактирования-->
+<ng-template #editTemplate>
+  <td>
+    <input type="text" [(ngModel)]="editedStudent._id" readonly disabled class="form-control" />
+  </td>
+  <td>
+    <input type="text" [(ngModel)]="editedStudent.fullName" class="form-control" />
+  </td>
+  <td>
+    <select class="form-control" [(ngModel)]="editedStudent.group" name="group">
+      <option *ngFor="let group of groups" [ngValue]="group">{{group.groupName}}</option>
+    </select>
+  </td>
+  <td>
+  <select class="form-control" [(ngModel)]="editedStudent.isAllowed" >
+    <option value=true>True</option>
+    <option value=false>False</option>
+  </select>
+</td>
+  
+  <td>
+    <input type="button" value="Save" (click)="saveStudent()" class="btn btn-success btn-block" />
+  </td>
+  <td>
+    <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning btn-block" />
+  </td>
+</ng-template>

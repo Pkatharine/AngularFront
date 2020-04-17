@@ -1,0 +1,20 @@
+﻿<!-- nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+    <div class="navbar-nav">
+        <a class="nav-link disabled" *ngIf="role=='admin'">hello Admin</a>
+        <a class="nav-item nav-link" *ngIf="role=='teacher'">hello Teacher</a>
+        <a class="nav-item nav-link" *ngIf="role=='student'">hello Student</a>
+        <a class="nav-item nav-link" routerLink="/">Home</a>
+        <a class="nav-item nav-link" routerLink="/group">Groups</a>
+        <a class="nav-item nav-link" routerLink="/student">Students</a>
+        <a class="nav-item nav-link" routerLink="/teacher">Teachers</a>
+        <a class="nav-item nav-link" routerLink="/subject">Subjects</a>
+        <a class="nav-item nav-link" routerLink="/mark">Marks</a>
+        <a class="nav-item nav-link" (click)="logout()">Logout</a>
+    </div>
+</nav>
+
+<!-- main app container -->
+<div class="container">
+    <router-outlet></router-outlet>
+</div>
